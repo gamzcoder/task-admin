@@ -24,18 +24,22 @@ export const api = createApi({
     }),
     registerUser: builder.mutation({
       query: (data) => ({
-        url: '/v1/auth/register',
+        url: '/auth/register',
         method: 'POST',
         body: data,
       }),
     }),
     loginUser: builder.mutation({
       query: (data) => ({
-        url: '/v1/auth/login',
+        url: '/api/login',
         method: 'POST',
         body: data,
       }),
-    })
+    }),
   }),
 });
-export const { useRegisterUserMutation, useCreateQuizMutation, useLoginUserMutation } = api;
+export const {
+  useRegisterUserMutation,
+  useCreateQuizMutation,
+  useLoginUserMutation,
+} = api;

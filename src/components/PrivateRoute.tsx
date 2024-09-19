@@ -1,14 +1,14 @@
 import React, { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 interface JwtPayload {
   exp: number;
 }
 
 interface RootState {
-  auth: {
+  app: {
     token: string | null;
   };
 }
@@ -18,10 +18,14 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-  const token = useSelector((state: RootState) => state.auth.token); // Token from Redux store
+  const token = useSelector((state: RootState) => {
+    console.log(state);
+    return state.app.token;
+  });
+  // console.log(token,'---------token')
 
   const isAuthenticated = (): boolean => {
-    if (!token) return false; // No token, user not authenticated
+    if (!token) return false;
 
     try {
       const { exp } = jwtDecode<JwtPayload>(token); // Decode token to get expiry time

@@ -5,28 +5,42 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useCreateQuizMutation } from '../../lib/store/feature/apiSlice';
 import Loader from '../../common/Loader';
 
-// Validation schema
 const CreateQuizValidationSchema = Yup.object({
   quizName: Yup.string().required('Quiz name is required'),
   description: Yup.string().required('Description is required'),
-  questions: Yup.array()
-    .of(
-      Yup.object({
-        text: Yup.string().required('Question text is required'),
-        options: Yup.object({
-          A: Yup.string().required('Option A is required'),
-          B: Yup.string().required('Option B is required'),
-          C: Yup.string().required('Option C is required'),
-          D: Yup.string().required('Option D is required'),
-        }),
-      }),
-    )
-    .min(5, 'At least 5 questions are required'),
+  questions: Yup.array().of(
+    Yup.object({
+      question: Yup.string().required('Question text is required'),
+      options: Yup.object({
+        a: Yup.string().required('Option a is required'),
+        b: Yup.string().required('Option b is required'),
+        c: Yup.string().required('Option c is required'),
+        d: Yup.string().required('Option d is required'),
+      }).required(),
+      answer: Yup.string().required('Answer is required'),
+    }),
+  ),
 });
 
-const CreateQuiz: React.FC  = () => {
-  const [createQuiz, { isloading }] = useCreateQuizMutation<{
-    isloading: boolean;
+type CreateQuizDto = {
+  quizName: string;
+  description: string;
+  questions: QuestionDto[];
+};
+type QuestionDto = {
+  question: string;
+  answer: string;
+  options: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+};
+
+const CreateQuiz: React.FC = () => {
+  const [createQuiz, { isLoading }] = useCreateQuizMutation<{
+    isLoading: boolean;
   }>();
   const initialValues = {
     quizName: '',
@@ -34,34 +48,45 @@ const CreateQuiz: React.FC  = () => {
     questions: [
       {
         id: 1,
-        text: '',
-        options: { A: '', B: '', C: '', D: '' },
+        question: '',
+        answer: '',
+        options: { a: '', b: '', c: '', d: '' },
       },
       {
         id: 2,
-        text: '',
-        options: { A: '', B: '', C: '', D: '' },
+        question: '',
+        answer: '',
+        options: { a: '', b: '', c: '', d: '' },
       },
       {
         id: 3,
-        text: '',
-        options: { A: '', B: '', C: '', D: '' },
+        question: '',
+        answer: '',
+        options: { a: '', b: '', c: '', d: '' },
       },
       {
         id: 4,
-        text: '',
-        options: { A: '', B: '', C: '', D: '' },
+        question: '',
+        answer: '',
+        options: { a: '', b: '', c: '', d: '' },
       },
       {
         id: 5,
-        text: '',
-        options: { A: '', B: '', C: '', D: '' },
+        question: '',
+        answer: '',
+        options: { a: '', b: '', c: '', d: '' },
       },
     ],
   };
 
-  const handleSubmit = async (values: any, { setSubmitting }: any) => {
+  const handleSubmit = async (
+    values: CreateQuizDto,
+    { setSubmitting }: any,
+  ) => {
     console.log('Form submitted with values:', values);
+    if (values.questions.length < 5) {
+      return toast.error('Please Add at least 5 question');
+    }
 
     try {
       await createQuiz(values);
@@ -73,15 +98,15 @@ const CreateQuiz: React.FC  = () => {
     }
   };
 
-  if (isloading) {
-    return Loader;
+  if (isLoading) {
+    return <Loader />;
   }
 
   return (
     <>
       <Toaster />
       <div className="rounded-sm border border-stroke bg-white shadow-default">
-        <div className="border-b border-stroke py-4 px-6.5">
+        <div className="border-B border-stroke py-4 px-6.5">
           <h3 className="font-medium text-black">
             Generate Quiz Questions Here
           </h3>
@@ -150,18 +175,18 @@ const CreateQuiz: React.FC  = () => {
                               </span>
                             </div>
                             <Field
-                              name={`questions[${index}].text`}
+                              name={`questions[${index}].question`}
                               placeholder="Enter your question"
                               className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary"
                             />
                             <ErrorMessage
-                              name={`questions[${index}].text`}
+                              name={`questions[${index}].question`}
                               component="div"
                               className="text-red-500"
                             />
 
                             <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1 place-items-start my-10">
-                              {['A', 'B', 'C', 'D'].map((option) => (
+                              {['a', 'b', 'c', 'd'].map((option) => (
                                 <span
                                   key={option}
                                   className="w-full flex flex-row gap-5 items-center justify-start"
@@ -183,6 +208,22 @@ const CreateQuiz: React.FC  = () => {
                                 </span>
                               ))}
                             </div>
+
+                            <div className="mb-4.5">
+                              <label className="mb-2.5 block text-black">
+                                Answer <span className="text-meta-1">*</span>
+                              </label>
+                              <Field
+                                name={`questions[${index}].answer`}
+                                placeholder="Enter the correct answer (a, b, c, or d)"
+                                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary"
+                              />
+                              <ErrorMessage
+                                name={`questions[${index}].answer`}
+                                component="div"
+                                className="text-red-500"
+                              />
+                            </div>
                           </div>
                         </div>
                       ))}
@@ -192,8 +233,9 @@ const CreateQuiz: React.FC  = () => {
                         onClick={() =>
                           push({
                             id: values.questions.length + 1,
-                            text: '',
-                            options: { A: '', B: '', C: '', D: '' },
+                            question: '',
+                            options: { a: '', b: '', c: '', d: '' },
+                            answer: '',
                           })
                         }
                         className="bg-green-900 text-white rounded-md w-1/4 max-md:w-1/2 max-sm:w-full py-3 px-5 my-10"

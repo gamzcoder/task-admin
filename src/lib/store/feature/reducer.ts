@@ -23,6 +23,7 @@ export const appSlice = createSlice({
       state.user = action.payload;
     },
     loginSuccess: (state, action) => {
+      console.log(state, action);
       state.token = action.payload.token;
       state.user = action.payload.user;
     },
