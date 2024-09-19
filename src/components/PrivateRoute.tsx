@@ -8,7 +8,7 @@ interface JwtPayload {
 }
 
 interface RootState {
-  app: {
+  auth: {
     token: string | null;
   };
 }
@@ -20,9 +20,8 @@ interface PrivateRouteProps {
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const token = useSelector((state: RootState) => {
     console.log(state);
-    return state.app.token;
+    return state.auth.token;
   });
-  // console.log(token,'---------token')
 
   const isAuthenticated = (): boolean => {
     if (!token) return false;
