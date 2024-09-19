@@ -22,7 +22,6 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
     console.log(state);
     return state.auth.token;
   });
-
   const isAuthenticated = (): boolean => {
     if (!token) return false;
 
