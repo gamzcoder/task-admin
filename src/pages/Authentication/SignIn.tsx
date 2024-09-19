@@ -1,7 +1,32 @@
-import React from 'react';
+import { useLoginUserMutation } from '../../lib/store/feature/apiSlice';
+import { loginSuccess } from '../../lib/store/feature/reducer';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 // import { Link } from 'react-router-dom';
 
 const SignIn: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginUser, { isLoading, isError, error }] = useLoginUserMutation(); // Destructure the mutation hook
+  const dispatch = useDispatch();
+
+  const handleLogin = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    try {
+      const response = await loginUser({ email, password }).unwrap(); 
+      dispatch(loginSuccess({
+        token: response.token,
+        user: response.user,
+      }));
+
+      // You can also redirect the user after a successful login if needed
+      // e.g., window.location.href = '/dashboard';
+
+    } catch (err) {
+      console.error('Failed to login:', err);
+
+    }
+  };
   return (
     <div className="container mx-auto my-10">
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -141,7 +166,7 @@ const SignIn: React.FC = () => {
                 Sign In to Quiz App
               </h2>
 
-              <form>
+              <form onSubmit={handleLogin}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Email
@@ -150,6 +175,8 @@ const SignIn: React.FC = () => {
                     <input
                       type="email"
                       placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
 
@@ -179,6 +206,8 @@ const SignIn: React.FC = () => {
                   <div className="relative">
                     <input
                       type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       placeholder="6+ Characters, 1 Capital letter"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -206,11 +235,18 @@ const SignIn: React.FC = () => {
                     </span>
                   </div>
                 </div>
+                {isError && (
+                  <p className="text-red-500">
+                    {'Failed to log in'}
+                  </p>
+                )}{' '}
+                {/* Show error if login fails */}
                 <div className="mb-5">
                   <input
                     type="submit"
-                    value="Sign In"
+                    value={isLoading ? 'Signing in...' : 'Sign In'} // Show loading state
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                    disabled={isLoading} // Disable button while loading
                   />
                 </div>
                 {/* <div className="mt-6 text-center">
