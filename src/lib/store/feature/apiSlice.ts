@@ -7,7 +7,7 @@ export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_URL,
-    prepareHeaders: (headers, {getState}) => {
+    prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) {
         headers.set('authorization', `${token}`);
@@ -18,8 +18,27 @@ export const api = createApi({
   endpoints: (builder) => ({
     createQuiz: builder.mutation({
       query: (data) => ({
-        url: '/admin/quiz',
+        url: '/api/admin/quiz',
         method: 'POST',
+        body: data,
+      }),
+    }),
+    getQuiz: builder.query({
+      query: () => ({
+        url: '/api/admin/quiz',
+        method: 'GET',
+      }),
+    }),
+    getQuizById: builder.query({
+      query: (id) => ({
+        url: `/api/admin/quiz-details?id=${id}`,
+        method: 'GET',
+      }),
+    }),
+    updateQuiz: builder.mutation({
+      query: (data) => ({
+        url: '/api/admin/quiz',
+        method: 'PUT',
         body: data,
       }),
     }),
@@ -37,10 +56,20 @@ export const api = createApi({
         body: data,
       }),
     }),
+    deleteQuiz: builder.mutation({
+      query: (id) => ({
+        url: `/api/admin/quiz?id=${id}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 export const {
   useRegisterUserMutation,
   useCreateQuizMutation,
   useLoginUserMutation,
+  useGetQuizQuery,
+  useGetQuizByIdQuery,
+  useUpdateQuizMutation,
+  useDeleteQuizMutation,
 } = api;

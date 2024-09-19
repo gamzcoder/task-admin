@@ -6,7 +6,7 @@ import { useCreateQuizMutation } from '../../lib/store/feature/apiSlice';
 import Loader from '../../common/Loader';
 
 const CreateQuizValidationSchema = Yup.object({
-  quizName: Yup.string().required('Quiz name is required'),
+  name: Yup.string().required('Quiz name is required'),
   description: Yup.string().required('Description is required'),
   questions: Yup.array().of(
     Yup.object({
@@ -23,7 +23,7 @@ const CreateQuizValidationSchema = Yup.object({
 });
 
 type CreateQuizDto = {
-  quizName: string;
+  name: string;
   description: string;
   questions: QuestionDto[];
 };
@@ -43,7 +43,7 @@ const CreateQuiz: React.FC = () => {
     isLoading: boolean;
   }>();
   const initialValues = {
-    quizName: '',
+    name: '',
     description: '',
     questions: [
       {
@@ -87,9 +87,18 @@ const CreateQuiz: React.FC = () => {
     if (values.questions.length < 5) {
       return toast.error('Please Add at least 5 question');
     }
+    const payload = {
+      name: values.name,
+      description: values.description,
+      questions: values.questions.map((item) => ({
+        question: item.question,
+        answer: item.answer,
+        options: item.options,
+      })),
+    };
 
     try {
-      await createQuiz(values);
+      await createQuiz(payload);
       toast.success('Quiz Created Successfully');
     } catch (error) {
       console.error('Error submitting quiz:', error);
@@ -106,7 +115,7 @@ const CreateQuiz: React.FC = () => {
     <>
       <Toaster />
       <div className="rounded-sm border border-stroke bg-white shadow-default">
-        <div className="border-B border-stroke py-4 px-6.5">
+        <div className="border-b border-stroke py-4 px-6.5">
           <h3 className="font-medium text-black">
             Generate Quiz Questions Here
           </h3>
@@ -124,13 +133,13 @@ const CreateQuiz: React.FC = () => {
                   <div className="w-full xl:w-1/2">
                     <label className="mb-2.5 block text-black">Quiz Name</label>
                     <Field
-                      name="quizName"
+                      name="name"
                       type="text"
                       placeholder="Enter Quiz Name"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary"
                     />
                     <ErrorMessage
-                      name="quizName"
+                      name="name"
                       component="div"
                       className="text-red-500"
                     />

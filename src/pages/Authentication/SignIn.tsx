@@ -10,12 +10,13 @@ const SignIn: React.FC = () => {
   const [password, setPassword] = useState('');
   const [loginUser, { isLoading, isError }] = useLoginUserMutation();
   const dispatch = useDispatch();
-  const [showpassword, setShowpassword] = useState(true);
+  const [showpassword, setShowpassword] = useState(false);
 
   const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
       const response = await loginUser({ email, password }).unwrap();
+      localStorage.setItem('token', response.token);
 
       dispatch(
         loginSuccess({
@@ -24,7 +25,7 @@ const SignIn: React.FC = () => {
       );
 
       toast.success('Login Successfully');
-      // window.location.href = '/';
+      window.location.href = '/';
     } catch (err) {
       toast.error('Failed to login');
       console.error('Failed to login:', err);

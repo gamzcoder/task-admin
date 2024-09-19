@@ -1,20 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
-
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
-import SignIn from './pages/Authentication/SignIn';
-import SignUp from './pages/Authentication/SignUp';
 import ECommerce from './pages/Dashboard/ECommerce';
-import FormElements from './pages/Form/FormElements';
-import FormLayout from './pages/Form/FormLayout';
-import Profile from './pages/Profile';
-import Settings from './pages/Settings';
-import Alerts from './pages/UiElements/Alerts';
-import Buttons from './pages/UiElements/Buttons';
 import DefaultLayout from './layout/DefaultLayout';
 import CreateQuiz from './pages/Create-Quiz/page';
-import PrivateRoute from './components/PrivateRoute';
+import SignIn from './pages/Authentication/SignIn';
+import QuizListing from './pages/Quiz-Listing/page';
+import UpdateQuiz from './pages/Update/[id]/page';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -37,11 +30,11 @@ function App() {
         element={
           <>
             <PageTitle title="eCommerce Dashboard" />
-            <PrivateRoute>
+            {/* <PrivateRoute> */}
             <DefaultLayout>
               <ECommerce />
             </DefaultLayout>
-            </PrivateRoute>
+            {/* </PrivateRoute> */}
           </>
         }
       />
@@ -50,64 +43,15 @@ function App() {
         element={
           <>
             <PageTitle title="Create Quiz" />
-            <PrivateRoute>
+            {/* <PrivateRoute> */}
             <DefaultLayout>
               <CreateQuiz />
             </DefaultLayout>
-            </PrivateRoute>
-            
-          </>
-        }
-      />
-      <Route
-        path="/forms/form-elements"
-        element={
-          <>
-            <PageTitle title="Form Elements " />
-            <DefaultLayout>
-              <FormElements />
-            </DefaultLayout>
-          </>
-        }
-      />
-      <Route
-        path="/forms/form-layout"
-        element={
-          <>
-            <PageTitle title="Form Layout " />
-            <FormLayout />
+            {/* </PrivateRoute> */}
           </>
         }
       />
 
-      <Route
-        path="/settings"
-        element={
-          <>
-            <PageTitle title="Settings " />
-            <Settings />
-          </>
-        }
-      />
-
-      <Route
-        path="/ui/alerts"
-        element={
-          <>
-            <PageTitle title="Alerts " />
-            <Alerts />
-          </>
-        }
-      />
-      <Route
-        path="/ui/buttons"
-        element={
-          <>
-            <PageTitle title="Buttons " />
-            <Buttons />
-          </>
-        }
-      />
       <Route
         path="/auth/signin"
         element={
@@ -118,11 +62,24 @@ function App() {
         }
       />
       <Route
-        path="/auth/signup"
+        path="/quiz-listing"
         element={
           <>
-            <PageTitle title="Signup " />
-            <SignUp />
+            <PageTitle title="Listing Of Quiz " />
+            <DefaultLayout>
+              <QuizListing />
+            </DefaultLayout>
+          </>
+        }
+      />
+      <Route
+        path="/update-quiz/:id"
+        element={
+          <>
+            <PageTitle title="Update Quiz" />
+            <DefaultLayout>
+              <UpdateQuiz />
+            </DefaultLayout>
           </>
         }
       />
