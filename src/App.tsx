@@ -14,6 +14,7 @@ import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
 import DefaultLayout from './layout/DefaultLayout';
 import CreateQuiz from './pages/Create-Quiz/page';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -36,21 +37,25 @@ function App() {
         element={
           <>
             <PageTitle title="eCommerce Dashboard" />
+            <PrivateRoute>
             <DefaultLayout>
               <ECommerce />
             </DefaultLayout>
+            </PrivateRoute>
           </>
         }
       />
-
       <Route
         path="/create-quiz"
         element={
           <>
             <PageTitle title="Create Quiz" />
+            <PrivateRoute>
             <DefaultLayout>
               <CreateQuiz />
             </DefaultLayout>
+            </PrivateRoute>
+            
           </>
         }
       />

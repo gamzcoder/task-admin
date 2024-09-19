@@ -24,7 +24,7 @@ const CreateQuizValidationSchema = Yup.object({
     .min(5, 'At least 5 questions are required'),
 });
 
-const CreateQuiz = () => {
+const CreateQuiz: React.FC  = () => {
   const [createQuiz, { isloading }] = useCreateQuizMutation<{
     isloading: boolean;
   }>();
