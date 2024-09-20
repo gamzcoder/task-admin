@@ -6,7 +6,7 @@ export const getTokenFromLocalStorage = () => {
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://54.210.80.202:3001/",
+    baseUrl: "https://54.210.80.202/",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) {
