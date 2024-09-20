@@ -8,6 +8,7 @@ import CreateQuiz from './pages/Create-Quiz/page';
 import SignIn from './pages/Authentication/SignIn';
 import QuizListing from './pages/Quiz-Listing/page';
 import UpdateQuiz from './pages/Update/[id]/page';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -30,11 +31,11 @@ function App() {
         element={
           <>
             <PageTitle title="eCommerce Dashboard" />
-            {/* <PrivateRoute> */}
+            <PrivateRoute>
             <DefaultLayout>
               <ECommerce />
             </DefaultLayout>
-            {/* </PrivateRoute> */}
+            </PrivateRoute>
           </>
         }
       />
@@ -43,11 +44,11 @@ function App() {
         element={
           <>
             <PageTitle title="Create Quiz" />
-            {/* <PrivateRoute> */}
+            <PrivateRoute>
             <DefaultLayout>
               <CreateQuiz />
             </DefaultLayout>
-            {/* </PrivateRoute> */}
+            </PrivateRoute>
           </>
         }
       />
@@ -66,9 +67,11 @@ function App() {
         element={
           <>
             <PageTitle title="Listing Of Quiz " />
+            <PrivateRoute>
             <DefaultLayout>
               <QuizListing />
             </DefaultLayout>
+            </PrivateRoute>
           </>
         }
       />
@@ -77,9 +80,11 @@ function App() {
         element={
           <>
             <PageTitle title="Update Quiz" />
+            <PrivateRoute>
             <DefaultLayout>
               <UpdateQuiz />
             </DefaultLayout>
+            </PrivateRoute>
           </>
         }
       />
